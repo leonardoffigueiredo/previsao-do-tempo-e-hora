@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --text-color: #333;
+            --bg-gradient: linear-gradient(135deg, #6dd5ed, #2193b0);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: none;
+            font-size: 1.1em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            background-color: #f0f8ff;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #3a7bd5;
+            transform: translateX(3px);
+        }
+
+        #resultado {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #resultado:hover {
+            transform: scale(1.02);
+        }
+
+        #resultado h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        #resultado p {
+            margin: 15px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .weather-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .search-box {
+                flex-direction: column;
+                box-shadow: none;
+            }
+
+            input[type="text"], button {
+                width: 100%;
+                border-radius: 30px;
+                margin-bottom: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            button {
+                transform: none;
+            }
+
+            button:hover {
+                transform: translateY(-3px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Previsão do Tempo</h1>
+    <div class="search-box">
+        <input type="text" id="cidadeInput" placeholder="Digite o nome da cidade">
+        <button onclick="buscarPrevisao()">Buscar</button>
+    </div>
+    <div id="resultado"></div>
+
+    <script>
+        async function buscarPrevisao() {
+            const cidade = document.getElementById('cidadeInput').value;
+            const apiKey = 'bd5e378503939ddaee76f12ad7a97608';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${cidade}&appid=${apiKey}&units=metric&lang=pt_br`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP! status: ${response.status}`);
+                }
+
+                const resultado = document.getElementById('resultado');
+                const iconCode = data.weather[0].icon;
+                const iconClass = getWeatherIconClass(iconCode);
+
+                // Obter data e hora local
+                const dataHoraLocal = new Date((data.dt + data.timezone) * 1000);
+                const opcoesData = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const opcoesHora = { hour: '2-digit', minute: '2-digit' };
+                const dataFormatada = dataHoraLocal.toLocaleDateString('pt-BR', opcoesData);
+                const horaFormatada = dataHoraLocal.toLocaleTimeString('pt-BR', opcoesHora);
+
+                // Mudar o fundo de acordo com o horário
+                const hora = dataHoraLocal.getHours();
+                let corFundo;
+                if (hora >= 5 && hora < 12) {
+                    corFundo = '#87CEEB'; // Azul claro para manhã
+                } else if (hora >= 12 && hora < 18) {
+                    corFundo = '#FFA500'; // Amarelo alaranjado para tarde
+                } else {
+                    corFundo = '#191970'; // Azul escuro para noite
+                }
+                document.body.style.background = corFundo;
+
+                resultado.innerHTML = `
+                    <div class="weather-icon"><i class="${iconClass}"></i></div>
+                    <h2>Dados meteorológicos para ${data.name}, ${data.sys.country}</h2>
+                    <p><strong>Data e Hora Local:</strong> ${dataFormatada} às ${horaFormatada}</p>
+                    <p><strong>Temperatura:</strong> ${data.main.temp.toFixed(1)}°C (sensação térmica: ${data.main.feels_like.toFixed(1)}°C)</p>
+                    <p><strong>Temperatura mín/máx:</strong> ${data.main.temp_min.toFixed(1)}°C / ${data.main.temp_max.toFixed(1)}°C</p>
+                    <p><strong>Umidade:</strong> ${data.main.humidity}%</p>
+                    <p><strong>Pressão atmosférica:</strong> ${data.main.pressure} hPa</p>
+                    <p><strong>Vento:</strong> ${data.wind.speed.toFixed(1)} m/s, direção: ${data.wind.deg}°</p>
+                    <p><strong>Visibilidade:</strong> ${(data.visibility / 1000).toFixed(1)} km</p>
+                    <p><strong>Condição:</strong> ${data.weather[0].description}</p>
+                    <p><strong>Nuvens:</strong> ${data.clouds.all}%</p>
+                    <p><strong>Coordenadas:</strong> Lat ${data.coord.lat.toFixed(2)}, Lon ${data.coord.lon.toFixed(2)}</p>
+                `;
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                document.getElementById('resultado').innerHTML = `Erro: ${error.message}`;
+            }
+        }
+
+        function getWeatherIconClass(iconCode) {
+            const iconMap = {
+                '01d': 'fas fa-sun',
+                '01n': 'fas fa-moon',
+                '02d': 'fas fa-cloud-sun',
+                '02n': 'fas fa-cloud-moon',
+                '03d': 'fas fa-cloud',
+                '03n': 'fas fa-cloud',
+                '04d': 'fas fa-cloud',
+                '04n': 'fas fa-cloud',
+                '09d': 'fas fa-cloud-showers-heavy',
+                '09n': 'fas fa-cloud-showers-heavy',
+                '10d': 'fas fa-cloud-sun-rain',
+                '10n': 'fas fa-cloud-moon-rain',
+                '11d': 'fas fa-bolt',
+                '11n': 'fas fa-bolt',
+                '13d': 'fas fa-snowflake',
+                '13n': 'fas fa-snowflake',
+                '50d': 'fas fa-smog',
+                '50n': 'fas fa-smog'
+            };
+            return iconMap[iconCode] || 'fas fa-question';
+        }
+    </script>
+</body>
+
+</html>
