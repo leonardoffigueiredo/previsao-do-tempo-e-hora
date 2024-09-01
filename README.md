@@ -41,7 +41,7 @@ Este projeto foi criado com o objetivo de aprimorar minhas habilidades em:
 
 ## 🔍 Como Usar
 
-1. Clone o repositório: git clone https://github.com/seu-usuario/seu-repositorio.git
+1. Clone o repositório: git clone https://github.com/leonardoffigueiredo/previsao-do-tempo-e-hora
 2. Navegue até o diretório do projeto: cd seu-repositorio
 3. Abra o arquivo index.html no seu navegador preferido.
 
