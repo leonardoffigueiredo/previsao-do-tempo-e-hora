@@ -1,5 +1,4 @@
-![{A05A1D07-5F7D-4A13-9DA9-ED406F109923}](https://github.com/user-attachments/assets/b44a35f6-4ce9-4854-823c-c2da51cecc64)# 🌦️ Projeto de Previsão do Tempo
-
+## 🌦️ Projeto de Previsão do Tempo
 Este repositório contém um projeto de previsão do tempo que demonstra minhas habilidades em desenvolvimento web utilizando **JavaScript**, **HTML**, **CSS** e o consumo de **APIs**.
 
 ## 📋 Descrição do Projeto
@@ -37,7 +36,7 @@ Este projeto foi criado com o objetivo de aprimorar minhas habilidades em:
 - Implementação de boas práticas de programação assíncrona usando **async/await**.
 
 ## 📸 Demonstração
-![{A05A1D07-5F7D-4A13-9DA9-ED406F109923}](https://github.com/user-attachments/assets/049ea714-e721-4d22-94d8-eb0b76ae9d2a)
+![{A05A1D07-5F7D-4A13-9DA9-ED406F109923}](https://github.com/user-attachments/assets/b44a35f6-4ce9-4854-823c-c2da51cecc64)
 
 
 ## 🔍 Como Usar
